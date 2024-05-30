@@ -16,14 +16,6 @@ const oneBlog = {
 
 const biggerListOfBlogs = [
   {
-    _id: '5a422a851b54a676234d17f7',
-    title: 'React patterns',
-    author: 'Michael Chan',
-    url: 'https://reactpatterns.com/',
-    likes: 7,
-    __v: 0,
-  },
-  {
     _id: '5a422aa71b54a676234d17f8',
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
@@ -31,6 +23,15 @@ const biggerListOfBlogs = [
     likes: 5,
     __v: 0,
   },
+  {
+    _id: '5a422a851b54a676234d17f7',
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 7,
+    __v: 0,
+  },
+
   {
     _id: '5a422b3a1b54a676234d17f9',
     title: 'Canonical string reduction',
@@ -74,6 +75,11 @@ const mostLikedBlog = {
   __v: 0,
 };
 
+const authorWithMostBlogs = {
+  author: 'Robert C. Martin',
+  blogs: 3,
+};
+
 test('dummy returns one', () => {
   const blogs = [];
 
@@ -115,5 +121,23 @@ describe('favourite blog', () => {
   test('returns the most liked blog when a bigger blog list is given', () => {
     const result = listHelper.favouriteBlog(biggerListOfBlogs);
     assert.deepStrictEqual(result, mostLikedBlog);
+  });
+});
+
+describe('top blog author', () => {
+  test('return none when an empty list is given', () => {
+    const result = listHelper.mostBlogs([]);
+    assert.strictEqual(result, 'none');
+  });
+
+  test('return the only blog when one blog is given', () => {
+    const result = listHelper.mostBlogs([oneBlog]);
+    assert.deepStrictEqual(result, { author: oneBlog.author, blogs: 1 });
+  });
+
+  test('returns the author with most blogs when a bigger blog list is given', () => {
+    const result = listHelper.mostBlogs(biggerListOfBlogs);
+    console.log(result);
+    assert.deepStrictEqual(result, authorWithMostBlogs);
   });
 });
