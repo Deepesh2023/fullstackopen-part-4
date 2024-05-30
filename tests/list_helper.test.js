@@ -80,6 +80,11 @@ const authorWithMostBlogs = {
   blogs: 3,
 };
 
+const authorWithMostLikes = {
+  author: 'Edsger W. Dijkstra',
+  likes: 17,
+};
+
 test('dummy returns one', () => {
   const blogs = [];
 
@@ -108,7 +113,7 @@ describe('Total likes', () => {
 });
 
 describe('favourite blog', () => {
-  test('gives none when no blog is given', () => {
+  test('gives "none" when no blog is given', () => {
     const result = listHelper.favouriteBlog([]);
     assert.strictEqual(result, 'none');
   });
@@ -125,7 +130,7 @@ describe('favourite blog', () => {
 });
 
 describe('top blog author', () => {
-  test('return none when an empty list is given', () => {
+  test('return "none" when an empty list is given', () => {
     const result = listHelper.mostBlogs([]);
     assert.strictEqual(result, 'none');
   });
@@ -137,7 +142,27 @@ describe('top blog author', () => {
 
   test('returns the author with most blogs when a bigger blog list is given', () => {
     const result = listHelper.mostBlogs(biggerListOfBlogs);
-    console.log(result);
     assert.deepStrictEqual(result, authorWithMostBlogs);
+  });
+});
+
+describe('author with most likes', () => {
+  test('return "none" when an empty list is given', () => {
+    const result = listHelper.mostLikes([]);
+    console.log(result);
+    assert.strictEqual(result, 'none');
+  });
+
+  test('return the only blog when one blog is given', () => {
+    const result = listHelper.mostLikes([oneBlog]);
+    assert.deepStrictEqual(result, {
+      author: oneBlog.author,
+      likes: oneBlog.likes,
+    });
+  });
+
+  test('returns the author with most likes when a bigger blog list is given', () => {
+    const result = listHelper.mostLikes(biggerListOfBlogs);
+    assert.deepStrictEqual(result, authorWithMostLikes);
   });
 });
