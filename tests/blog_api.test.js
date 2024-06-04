@@ -43,6 +43,22 @@ test('the default "_id" key name is changed to "id"', async () => {
   });
 });
 
+test('can upload a new blog to the database', async () => {
+  await api
+    .post('/api/blogs')
+    .send({
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      likes: 12,
+    })
+    .expect(201);
+
+  const blogsOnDataBase = await helper.getAllBlogs();
+
+  assert.strictEqual(helper.initialBlogs.length + 1, blogsOnDataBase.length);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
