@@ -2,12 +2,11 @@ const { test, beforeEach, after } = require('node:test');
 const assert = require('node:assert');
 const supertest = require('supertest');
 
-const Blog = require('../models/blog');
 const app = require('../app');
 const { default: mongoose } = require('mongoose');
+const Blog = require('../models/blog');
 
 const helper = require('./blog_test_helper');
-
 const api = supertest(app);
 
 beforeEach(async () => {
@@ -22,12 +21,26 @@ beforeEach(async () => {
 });
 
 test('returns all the blogs', async () => {
-  const blogs = await api
+  const response = await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
-  assert.strictEqual(blogs.body.length, helper.initialBlogs.length);
+  assert.strictEqual(response.body.length, helper.initialBlogs.length);
+});
+
+test('the default "_id" key name is changed to "id"', async () => {
+  const response = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const blogs = response.body;
+
+  blogs.forEach((blog) => {
+    assert(blog.id, true);
+    assert.strictEqual(blog._id, undefined);
+  });
 });
 
 after(async () => {
