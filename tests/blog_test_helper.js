@@ -15,6 +15,13 @@ const initialBlogs = [
   },
 ];
 
+const getSingleBlog = async () => {
+  const blogs = await Blog.find({});
+  const blog = blogs[0];
+
+  return JSON.stringify(blog);
+};
+
 const getAllBlogs = async () => {
   const blogs = await Blog.find({});
 
@@ -23,5 +30,6 @@ const getAllBlogs = async () => {
 
 module.exports = {
   initialBlogs,
+  getSingleBlog,
   getAllBlogs,
 };
