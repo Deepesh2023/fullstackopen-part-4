@@ -75,6 +75,23 @@ test('if no likes is provided, post likes default to zero', async () => {
   assert.strictEqual(newBlog.likes, 0);
 });
 
+test('returns bad request error 400 when posting a new blog without blog title or url', async () => {
+  const blogWithoutTitle = {
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    likes: 12,
+  };
+
+  const blogWithoutUrl = {
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    likes: 12,
+  };
+
+  await api.post('/api/blogs').send(blogWithoutTitle).expect(400);
+  await api.post('/api/blogs').send(blogWithoutUrl).expect(400);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });

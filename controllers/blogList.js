@@ -13,6 +13,11 @@ blogsRouter.get('/blogs', async (request, response) => {
 blogsRouter.post('/blogs', async (request, response) => {
   const newBlog = request.body;
 
+  if (!newBlog.title || !newBlog.url) {
+    response.status(400).end();
+    return;
+  }
+
   if (!newBlog.likes) {
     newBlog.likes = 0;
   }
