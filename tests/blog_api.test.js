@@ -59,6 +59,22 @@ test('can upload a new blog to the database', async () => {
   assert.strictEqual(helper.initialBlogs.length + 1, blogsOnDataBase.length);
 });
 
+test('if no likes is provided, post likes default to zero', async () => {
+  const blogWithoutLikes = {
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+  };
+
+  const response = await api
+    .post('/api/blogs')
+    .send(blogWithoutLikes)
+    .expect(201);
+
+  const newBlog = response.body;
+  assert.strictEqual(newBlog.likes, 0);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
