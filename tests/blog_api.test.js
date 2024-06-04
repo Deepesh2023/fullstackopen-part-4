@@ -1,4 +1,4 @@
-const { test, beforeEach, after } = require('node:test');
+const { test, beforeEach, after, describe } = require('node:test');
 const assert = require('node:assert');
 const supertest = require('supertest');
 
@@ -56,7 +56,10 @@ test('can upload a new blog to the database', async () => {
 
   const blogsOnDataBase = await helper.getAllBlogs();
 
-  assert.strictEqual(helper.initialBlogs.length + 1, blogsOnDataBase.length);
+  assert.strictEqual(
+    helper.initialBlogs.length + 1,
+    JSON.parse(blogsOnDataBase).length
+  );
 });
 
 test('if no likes is provided, post likes default to zero', async () => {
@@ -90,6 +93,30 @@ test('returns bad request error 400 when posting a new blog without blog title o
 
   await api.post('/api/blogs').send(blogWithoutTitle).expect(400);
   await api.post('/api/blogs').send(blogWithoutUrl).expect(400);
+});
+
+describe('deleting a single blog', () => {
+  test('deletes the given blog successfully', async () => {
+    const blogs = await helper.getAllBlogs();
+    const blog = JSON.parse(blogs)[0];
+    await api.delete(`/api/blogs/${blog.id}`).expect(204);
+
+    const blogsOnDataBase = await helper.getAllBlogs();
+    assert.strictEqual(
+      helper.initialBlogs.length - 1,
+      JSON.parse(blogsOnDataBase).length
+    );
+  });
+  test('returns error if invalid url is given', async () => {
+    const id = '5';
+    await api.delete(`/api/blogs/${id}`).expect(400);
+
+    const blogsOnDataBase = await helper.getAllBlogs();
+    assert.strictEqual(
+      helper.initialBlogs.length,
+      JSON.parse(blogsOnDataBase).length
+    );
+  });
 });
 
 after(async () => {
