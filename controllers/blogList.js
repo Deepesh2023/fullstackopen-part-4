@@ -5,10 +5,9 @@ blogsRouter.get('/', (request, response) => {
   response.send('<h1>Blog list</h1>');
 });
 
-blogsRouter.get('/blogs', (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs);
-  });
+blogsRouter.get('/blogs', async (request, response) => {
+  const blogs = await Blog.find({});
+  response.json(blogs);
 });
 
 blogsRouter.post('/blogs', (request, response) => {
