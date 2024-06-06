@@ -7,7 +7,7 @@ blogsRouter.get('/', (request, response) => {
 });
 
 blogsRouter.get('/blogs', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user');
+  const blogs = await Blog.find({}).populate('user', '-blogs');
   response.status(200).json(blogs);
 });
 
