@@ -2,8 +2,17 @@ const mongoose = require('mongoose');
 const config = require('../utils/config');
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true,
+  },
   name: String,
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog',
+    }
+  ],
   passwordHash: String,
 });
 

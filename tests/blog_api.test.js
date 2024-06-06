@@ -229,11 +229,23 @@ describe('user creation', () => {
   });
 
   test('cannot create user if username already exists', async () => {
-    console.log(helper.initialUsers[0]);
     await api.post('/api/users').send(helper.initialUsers[0]).expect(400);
     const users = await helper.getAllUsers();
 
     assert.strictEqual(users.length, helper.initialUsers.length);
+  });
+
+  describe('extra tests', () => {
+    test('successfully creates a user field in a new blog post', async () => {
+      const newBlog = {
+        title: 'full stack development is a headache',
+        author: 'deepesh',
+        url: 'fdsafd.com',
+      };
+
+      const response = await api.post('/api/blogs').send(newBlog).expect(201);
+      assert(response.body.user, true);
+    });
   });
 });
 
