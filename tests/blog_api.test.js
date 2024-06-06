@@ -28,6 +28,7 @@ beforeEach(async () => {
   await Promise.all(blogsPromiseArray);
   await Promise.all(usersPromiseArray);
 });
+
 describe('all http get request', () => {
   test('returns a single blog', async () => {
     const blog = JSON.parse(await helper.getSingleBlog());
@@ -210,6 +211,29 @@ describe('testing the user router', () => {
       .expect('Content-Type', /application\/json/);
 
     assert.strictEqual(newUser.name, response.body.name);
+  });
+});
+
+describe('user creation', () => {
+  test('cannot create user with username less than 3 characters', async () => {
+    const newUser = {
+      username: 'fd',
+      name: 'fred dominics',
+      password: 'trwtrw',
+    };
+
+    await api.post('/api/users').send(newUser).expect(400);
+    const users = await helper.getAllUsers();
+
+    assert.strictEqual(users.length, helper.initialUsers.length);
+  });
+
+  test('cannot create user if username already exists', async () => {
+    console.log(helper.initialUsers[0]);
+    await api.post('/api/users').send(helper.initialUsers[0]).expect(400);
+    const users = await helper.getAllUsers();
+
+    assert.strictEqual(users.length, helper.initialUsers.length);
   });
 });
 

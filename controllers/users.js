@@ -10,7 +10,17 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body;
 
-  console.log(response.body);
+  if (username.length < 3 || password.length < 3) {
+    return response
+      .status(400)
+      .json({ error: 'username/password should be atleast 3 chara long' });
+  }
+
+  const exsistingUser = await User.findOne({ username: username });
+
+  if (exsistingUser) {
+    return response.status(400).json({ error: 'username already taken' });
+  }
 
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
