@@ -234,18 +234,38 @@ describe('user creation', () => {
 
     assert.strictEqual(users.length, helper.initialUsers.length);
   });
+});
 
-  describe('extra tests', () => {
-    test('successfully creates a user field in a new blog post', async () => {
-      const newBlog = {
-        title: 'full stack development is a headache',
-        author: 'deepesh',
-        url: 'fdsafd.com',
-      };
+describe('extra tests', () => {
+  test('successfully creates a user field in a new blog post', async () => {
+    const newBlog = {
+      title: 'full stack development is a headache',
+      author: 'deepesh',
+      url: 'fdsafd.com',
+    };
 
-      const response = await api.post('/api/blogs').send(newBlog).expect(201);
-      assert(response.body.user, true);
-    });
+    const response = await api.post('/api/blogs').send(newBlog).expect(201);
+    assert(response.body.user, true);
+  });
+});
+
+describe('login router', () => {
+  test('returns error if login with a username that doesnt exists', async () => {
+    const user = {
+      username: 'chandran',
+      password: 'trewtr',
+    };
+
+    await api.post('/api/login').send(user).expect(400);
+  });
+
+  test('returns error if login with a wrong password', async () => {
+    const user = {
+      username: 'light_yagamesh',
+      password: 'trewtr',
+    };
+
+    await api.post('/api/login').send(user).expect(401);
   });
 });
 

@@ -1,5 +1,6 @@
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 const initialBlogs = [
   {
@@ -33,13 +34,13 @@ const initialUsers = [
   {
     username: 'light_yagamesh',
     name: 'deepesh',
-    password: '54235423trewtrwt',
+    password: 'deepesh',
   },
 
   {
     username: 'cherryistamallthecherry',
     name: 'bhadra',
-    password: '54325trewtrwyu',
+    password: 'bhadra',
   },
 ];
 
