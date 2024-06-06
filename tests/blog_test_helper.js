@@ -28,8 +28,23 @@ const getAllBlogs = async () => {
   return JSON.stringify(blogs);
 };
 
+const initialUsers = [
+  {
+    username: 'light_yagamesh',
+    name: 'deepesh',
+    passwordHash: '54235423trewtrwt',
+  },
+
+  {
+    username: 'cherryistamallthecherry',
+    name: 'bhadra',
+    passwordHash: '54325trewtrwyu',
+  },
+];
+
 module.exports = {
   initialBlogs,
   getSingleBlog,
   getAllBlogs,
+  initialUsers,
 };

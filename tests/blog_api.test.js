@@ -4,20 +4,29 @@ const supertest = require('supertest');
 
 const app = require('../app');
 const { default: mongoose } = require('mongoose');
+
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const helper = require('./blog_test_helper');
 const api = supertest(app);
 
 beforeEach(async () => {
   await Blog.deleteMany({});
+  await User.deleteMany({});
 
-  const promiseArray = helper.initialBlogs.map((blog) => {
+  const blogsPromiseArray = helper.initialBlogs.map((blog) => {
     const newBlog = new Blog(blog);
     return newBlog.save();
   });
 
-  await Promise.all(promiseArray);
+  const usersPromiseArray = helper.initialUsers.map((user) => {
+    const newUser = new User(user);
+    return newUser.save();
+  });
+
+  await Promise.all(blogsPromiseArray);
+  await Promise.all(usersPromiseArray);
 });
 describe('all http get request', () => {
   test('returns a single blog', async () => {
@@ -174,6 +183,33 @@ describe('updating blogs', () => {
     );
 
     assert.strictEqual(wasBlogUpdated, false);
+  });
+});
+
+describe('testing the user router', () => {
+  test('gets all the users', async () => {
+    const response = await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    assert.strictEqual(response.body.length, helper.initialUsers.length);
+  });
+
+  test('can create a new user', async () => {
+    const newUser = {
+      username: 'sudhakaran',
+      name: 'sudhu',
+      password: 'test',
+    };
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    assert.strictEqual(newUser.name, response.body.name);
   });
 });
 
