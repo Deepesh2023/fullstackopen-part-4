@@ -4,14 +4,14 @@ const config = require('../utils/config');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
-const getToken = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '');
-  }
+// const getToken = (request) => {
+//   const authorization = request.get('authorization');
+//   if (authorization && authorization.startsWith('Bearer ')) {
+//     return authorization.replace('Bearer ', '');
+//   }
 
-  return null;
-};
+//   return null;
+// };
 
 blogsRouter.get('/', (request, response) => {
   response.send('<h1>Blog list</h1>');
@@ -28,13 +28,11 @@ blogsRouter.get('/blogs/:id', async (request, response) => {
 });
 
 blogsRouter.post('/blogs', async (request, response) => {
-  const token = getToken(request);
+  const token = request.token;
   const decodedToken = jwt.decode(token, config.SECRET);
   if (!decodedToken.id) {
     return response.status(401).send({ error: 'invalid token' });
   }
-
-  console.log(decodedToken.username, decodedToken.id);
 
   const newBlog = request.body;
 
