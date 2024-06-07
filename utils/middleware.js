@@ -3,8 +3,12 @@ const { error } = require('./logger');
 const SECRET = require('./config').SECRET;
 
 const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization');
+  if (!request.get('authorization')) {
+    next();
+    return;
+  }
 
+  const authorization = request.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
     const token = authorization.replace('Bearer ', '');
     request.token = token;

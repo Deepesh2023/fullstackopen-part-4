@@ -4,15 +4,6 @@ const config = require('../utils/config');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
-// const getToken = (request) => {
-//   const authorization = request.get('authorization');
-//   if (authorization && authorization.startsWith('Bearer ')) {
-//     return authorization.replace('Bearer ', '');
-//   }
-
-//   return null;
-// };
-
 blogsRouter.get('/', (request, response) => {
   response.send('<h1>Blog list</h1>');
 });
@@ -76,7 +67,18 @@ blogsRouter.put('/blogs/:id', async (request, response) => {
 });
 
 blogsRouter.delete('/blogs/:id', async (request, response) => {
+  const token = request.token;
+  const decodedToken = jwt.decode(token, config.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).send({ error: 'invalid token' });
+  }
+
   const id = request.params.id;
+  const user = await User.findById(decodedToken.id);
+  const blogToDelete = await Blog.findById(id);
+  if (user.id.toString() !== blogToDelete.user.toString()) {
+    return response.status(401).json({ error: 'unauthorized' });
+  }
 
   try {
     const result = await Blog.findByIdAndDelete(id);

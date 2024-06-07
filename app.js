@@ -11,9 +11,9 @@ const middleware = require('./utils/middleware');
 app.use(cors());
 app.use(express.json());
 app.use(middleware.tokenExtractor);
-app.use('/api', blogsRouter);
-app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/users', usersRouter);
+app.use('/api', blogsRouter);
 app.use(middleware.errorHandler);
 app.use(middleware.unknownEndPoint);
 
