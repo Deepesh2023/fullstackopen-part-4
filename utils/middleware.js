@@ -1,6 +1,6 @@
-const { error } = require('./logger');
-
+const jwt = require('jsonwebtoken');
 const SECRET = require('./config').SECRET;
+const User = require('../models/user');
 
 const tokenExtractor = (request, response, next) => {
   if (!request.get('authorization')) {
@@ -16,6 +16,16 @@ const tokenExtractor = (request, response, next) => {
   } else {
     throw new Error('invalid token');
   }
+};
+
+const userExtractor = async (request, response, next) => {
+  const token = request.token;
+  const decodedToken = jwt.decode(token, SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).send({ error: 'invalid token' });
+  }
+  request.user = await User.findById(decodedToken.id);
+  next();
 };
 
 const unknownEndPoint = (request, response) => {
@@ -38,4 +48,9 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
-module.exports = { tokenExtractor, unknownEndPoint, errorHandler };
+module.exports = {
+  tokenExtractor,
+  userExtractor,
+  unknownEndPoint,
+  errorHandler,
+};
