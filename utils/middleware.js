@@ -3,11 +3,6 @@ const SECRET = require('./config').SECRET;
 const User = require('../models/user');
 
 const tokenExtractor = (request, response, next) => {
-  if (!request.get('authorization')) {
-    next();
-    return;
-  }
-
   const authorization = request.get('authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
     const token = authorization.replace('Bearer ', '');
@@ -20,6 +15,7 @@ const tokenExtractor = (request, response, next) => {
 
 const userExtractor = async (request, response, next) => {
   const token = request.token;
+
   const decodedToken = jwt.decode(token, SECRET);
   if (!decodedToken.id) {
     return response.status(401).send({ error: 'invalid token' });
