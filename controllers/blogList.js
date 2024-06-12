@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
-const config = require('../utils/config');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 const userExtractor = require('../utils/middleware').userExtractor;
@@ -58,9 +57,8 @@ blogsRouter.put(
   userExtractor,
   async (request, response) => {
     const id = request.params.id;
-
     const updatedBlog = request.body;
-    console.log(updatedBlog);
+    updatedBlog.user = request.user;
 
     try {
       const result = await Blog.findByIdAndUpdate(id, updatedBlog, {

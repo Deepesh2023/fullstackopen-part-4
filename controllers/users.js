@@ -11,6 +11,7 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response, next) => {
   const { username, name, password } = request.body;
 
+  
 
   if (username.length < 3 || password.length < 3) {
     return response

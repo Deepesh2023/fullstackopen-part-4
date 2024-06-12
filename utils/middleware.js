@@ -3,10 +3,12 @@ const SECRET = require('./config').SECRET;
 const User = require('../models/user');
 
 const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization');
+  const authorization = request.get('Authorization');
+
   if (authorization && authorization.startsWith('Bearer ')) {
     const token = authorization.replace('Bearer ', '');
     request.token = token;
+
     next();
   } else {
     throw new Error('invalid token');
