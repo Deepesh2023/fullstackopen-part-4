@@ -87,7 +87,7 @@ blogsRouter.delete(
 
     try {
       const result = await Blog.findByIdAndDelete(id);
-      response.status(204).end();
+      response.json(result);
     } catch (exception) {
       response.status(400).end();
     }
